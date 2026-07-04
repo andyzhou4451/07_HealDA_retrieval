@@ -1,0 +1,3 @@
+batch_size,channels_last,compile,effective_batch_size,max_memory_allocated_gb,max_memory_reserved_gb,memory_utilization,nan_or_inf,num_workers,oom,patch_size,persistent_workers,pin_memory,precision,prefetch_factor,returncode,samples_per_second,step_time_mean,step_time_p50,step_time_p90
+1,True,False,1,28.103125,33.0625,0.41328125,False,4,False,"[8, 8]",True,True,bf16,2,0,2.44,0.4098360655737705,0.4098360655737705,0.4508196721311476
+2,True,False,2,34.053125,40.0625,0.50078125,False,4,False,"[8, 8]",True,True,bf16,2,0,2.9079700005769253,0.6877650043168296,0.6877650043168296,0.7565415047485127

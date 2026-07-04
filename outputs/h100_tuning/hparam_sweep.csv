@@ -1,0 +1,4 @@
+grad_clip_norm,lr,nan_or_inf,oom,returncode,samples_per_second,val/overall_rmse,warmup_steps,weight_decay
+1.0,0.0005908060857213808,False,False,0,1.0,0.4354890936691036,2000,0.0001
+1.0,0.0007655238955552604,False,False,0,1.0,0.4692028160625301,0,0.0003
+1.0,6.0721653939052665e-05,False,False,0,1.0,0.1780752612345038,1000,0.001

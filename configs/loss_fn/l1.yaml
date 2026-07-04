@@ -1,0 +1,4 @@
+# Loss function configuration
+# Default: L1 Loss (Mean Absolute Error)
+_target_: torch.nn.L1Loss
+reduction: mean

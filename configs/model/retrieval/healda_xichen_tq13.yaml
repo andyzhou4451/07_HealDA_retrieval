@@ -1,0 +1,50 @@
+# HealDA-style model that outputs [B,26,181,360].
+# Kept at the model-config root so the user-facing override model.model_size=tiny works.
+model_size: base
+
+net:
+  _target_: src.models.retrieval.healda_xichen_retrieval.HealDAXiChenRetrieval
+  sensors:
+    - atms
+    - amsua
+    - mhs
+    - hrs4
+    - gdas_prebufr
+  target_vars: [
+    "t-50", "t-100", "t-150", "t-200", "t-250", "t-300", "t-400", "t-500", "t-600", "t-700", "t-850", "t-925", "t-1000",
+    "q-50", "q-100", "q-150", "q-200", "q-250", "q-300", "q-400", "q-500", "q-600", "q-700", "q-850", "q-925", "q-1000",
+  ]
+  pressure_levels: [50, 100, 150, 200, 250, 300, 400, 500, 600, 700, 850, 925, 1000]
+  output_channels: 26
+  output_grid: [181, 360]
+  grid_backend: hpx
+  fallback_grid_backend: latlon
+  hpx_nside: 64
+  model_size: ${model.model_size}
+  patch_size: [6, 6]
+  mlp_ratio: 4.0
+  dropout: 0.05
+  drop_path: 0.1
+  concat_observability_mask: true
+  use_gradient_checkpointing: ${oc.select:training.use_gradient_checkpointing,false}
+  channels_last: ${oc.select:training.channels_last,false}
+
+model_size_options:
+  tiny:
+    dim: 256
+    depth: 6
+    heads: 4
+    obs_token_dim: 32
+    sensor_embed_dim: 128
+  base:
+    dim: 512
+    depth: 12
+    heads: 8
+    obs_token_dim: 32
+    sensor_embed_dim: 256
+  full_healda_like:
+    dim: 1024
+    depth: 24
+    heads: 16
+    obs_token_dim: 32
+    sensor_embed_dim: 512

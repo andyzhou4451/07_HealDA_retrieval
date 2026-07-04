@@ -1,0 +1,21 @@
+# 路径配置
+# root目录：使用 sbatch/python 启动时的项目目录，不依赖 PROJECT_ROOT 环境变量
+root_dir: ${hydra:runtime.cwd}
+
+# 数据目录：默认对齐可正常运行的 public02 超算目录；如需换盘，在命令行覆盖 paths.* 即可
+era5_hr_dir: /public02/data/era5_np721x1440_level13_merged/
+era5_lr_dir: /public02/data/era5_np181x360_level13
+era5_dir: /public02/data/era5_np181x360_level13
+scale_dir: /public02/data/era5_np181x360_level13/normalized_mean_std
+obs_dir: /public02/data/Observation/observation_npy/
+
+# 日志目录
+log_dir: ${paths.root_dir}/logs
+
+# 输出目录 (由hydra动态生成)
+output_dir: ${hydra:runtime.output_dir}
+
+# 工作目录
+work_dir: ${hydra:runtime.cwd}
+
+performance_log_dir: outputs/logs

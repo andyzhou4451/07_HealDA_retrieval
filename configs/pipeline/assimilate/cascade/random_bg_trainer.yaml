@@ -1,0 +1,2 @@
+# 天气预报训练器配置
+_target_: src.pipeline.assimilate.cascade.random_bg_trainer.RandomBgCascadeAssimTrainer

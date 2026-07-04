@@ -1,0 +1,141 @@
+# @package _global_
+
+# 单卡 H100 80GB 专用训练配置：HealDA-style 多源观测 -> ERA5 T/Q13 反演。
+defaults:
+  - datamodule: retrieval/healda_atms_amsua_mhs_hrs4_gdas_tq13.yaml
+  - model: retrieval/healda_xichen_tq13.yaml
+  - loss_fn: retrieval_tq_huber.yaml
+  - paths: retrieval_public02.yaml
+  - hydra: default.yaml
+  - pipeline: retrieval/trainer.yaml
+  - training: retrieval/healda_atms_amsua_mhs_hrs4_gdas_tq13.yaml
+  - _self_
+
+task_name: healda_xichen_tq13_h100_single_gpu
+seed: 1024
+debug: false
+
+hardware:
+  gpu: H100_80GB
+  single_gpu: true
+  device: cuda:0
+  target_memory_utilization: 0.88
+  max_memory_utilization: 0.94
+  min_free_memory_gb: 4
+  benchmark_steps: 30
+  warmup_steps: 10
+
+precision:
+  amp: true
+  amp_dtype: bf16
+  allow_tf32: true
+  matmul_precision: high
+  channels_last: true
+  compile:
+    enabled: true
+    target: backbone
+    mode: max-autotune
+  compile_mode: max-autotune
+
+optimizer:
+  name: AdamW
+  lr: 1.0e-4
+  weight_decay: 3.0e-4
+  betas: [0.9, 0.95]
+  eps: 1.0e-8
+
+scheduler:
+  name: cosine
+  warmup_steps: 1000
+  total_steps: 100000
+  min_lr_ratio: 0.05
+
+tuning:
+  enabled: true
+  method: quasi_random
+  lr_sweep:
+    enabled: true
+    num_trials: 12
+    min_lr: 1.0e-6
+    max_lr: 3.0e-3
+    scale: log
+    short_run_steps: 500
+  weight_decay_sweep:
+    enabled: true
+    values: [0.0, 1.0e-5, 3.0e-5, 1.0e-4, 3.0e-4, 1.0e-3]
+  warmup_sweep:
+    enabled: true
+    values: [0, 500, 1000, 2000, 4000]
+  gradient_clip_sweep:
+    enabled: true
+    values: [null, 1.0, 5.0]
+  objective:
+    primary: val/overall_rmse
+    secondary:
+      - samples_per_second
+      - stability
+      - memory_utilization
+      - train/loss
+
+training:
+  epochs: 50
+  seed: 1024
+  resume_ckpt: false
+  pretrain_ckpt: null
+  resume_pretrain: false
+  device: cuda
+  single_gpu: true
+  lr: ${optimizer.lr}
+  betas: ${optimizer.betas}
+  weight_decay: ${optimizer.weight_decay}
+  eps: ${optimizer.eps}
+  max_grad_norm: 1.0
+  grad_clip_norm: 1.0
+  gradient_accumulation_steps: 1
+  effective_batch_size: ${datamodule.batch_size}
+  warmup_steps: ${scheduler.warmup_steps}
+  scheduler_type: cosine
+  max_steps: ${scheduler.total_steps}
+  use_amp: ${precision.amp}
+  precision:
+    type: ${precision.amp_dtype}
+  cudnn_benchmark: true
+  deterministic: false
+  float32_matmul_precision: ${precision.matmul_precision}
+  channels_last: ${precision.channels_last}
+  fused_adamw: false
+  use_gradient_checkpointing: false
+  ddp_auto_move_inputs: false
+  find_unused_parameters: false
+  broadcast_buffers: false
+  gradient_as_bucket_view: true
+  static_graph: false
+  bucket_cap_mb: 64
+  compile: ${precision.compile}
+  log_dir: ${paths.output_dir}
+  performance_log_dir: outputs/logs
+  performance_log_every_n_steps: 1
+  profile: false
+  log_every_n_steps: 20
+  validate_every_n_epochs: 1
+  save_every_n_epochs: 1
+  limit_train_batches: null
+  limit_val_batches: null
+
+datamodule:
+  batch_size: 1
+  num_workers: 8
+  pin_memory: true
+  prefetch_factor: 4
+  persistent_workers: true
+  data:
+    max_points_per_sensor: 100000
+    strict_time_index: true
+    dt_data: 1
+
+model:
+  model_size: base
+  net:
+    patch_size: [8, 8]
+    channels_last: ${precision.channels_last}
+    use_gradient_checkpointing: ${training.use_gradient_checkpointing}

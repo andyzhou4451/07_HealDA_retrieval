@@ -1,0 +1,2 @@
+# 天气预报训练器配置
+_target_: src.pipeline.forecast.trainer.ForecastTrainer

@@ -1,0 +1,52 @@
+[
+  {
+    "batch_size": 1,
+    "effective_batch_size": 1,
+    "patch_size": [
+      8,
+      8
+    ],
+    "num_workers": 4,
+    "prefetch_factor": 2,
+    "pin_memory": true,
+    "persistent_workers": true,
+    "precision": "bf16",
+    "compile": false,
+    "channels_last": true,
+    "oom": false,
+    "nan_or_inf": false,
+    "returncode": 0,
+    "samples_per_second": 2.44,
+    "max_memory_reserved_gb": 33.0625,
+    "max_memory_allocated_gb": 28.103125,
+    "memory_utilization": 0.41328125,
+    "step_time_mean": 0.4098360655737705,
+    "step_time_p50": 0.4098360655737705,
+    "step_time_p90": 0.4508196721311476
+  },
+  {
+    "batch_size": 2,
+    "effective_batch_size": 2,
+    "patch_size": [
+      8,
+      8
+    ],
+    "num_workers": 4,
+    "prefetch_factor": 2,
+    "pin_memory": true,
+    "persistent_workers": true,
+    "precision": "bf16",
+    "compile": false,
+    "channels_last": true,
+    "oom": false,
+    "nan_or_inf": false,
+    "returncode": 0,
+    "samples_per_second": 2.9079700005769253,
+    "max_memory_reserved_gb": 40.0625,
+    "max_memory_allocated_gb": 34.053125,
+    "memory_utilization": 0.50078125,
+    "step_time_mean": 0.6877650043168296,
+    "step_time_p50": 0.6877650043168296,
+    "step_time_p90": 0.7565415047485127
+  }
+]

@@ -1,0 +1,14 @@
+# @package _global_
+
+defaults:
+  - _self_
+  - datamodule: forecast/xichen_state_forecast.yaml
+  - model: forecast/xichen_state_forecast.yaml
+  - loss_fn: crps_gaussian.yaml
+  - paths: default.yaml
+  - hydra: default.yaml
+  - pipeline: forecast/xichen_state_forecast.yaml
+  - training: default.yaml
+  
+# 任务
+task_name: "pretrain_xichen_forecast"

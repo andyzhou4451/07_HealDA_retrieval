@@ -1,0 +1,2 @@
+# 观测算子训练器配置  
+_target_: src.pipeline.obsoperator.trainer.ObsOperatorTrainer

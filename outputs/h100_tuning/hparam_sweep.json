@@ -1,0 +1,35 @@
+[
+  {
+    "lr": 0.0005908060857213808,
+    "weight_decay": 0.0001,
+    "warmup_steps": 2000,
+    "grad_clip_norm": 1.0,
+    "returncode": 0,
+    "oom": false,
+    "nan_or_inf": false,
+    "val/overall_rmse": 0.4354890936691036,
+    "samples_per_second": 1.0
+  },
+  {
+    "lr": 0.0007655238955552604,
+    "weight_decay": 0.0003,
+    "warmup_steps": 0,
+    "grad_clip_norm": 1.0,
+    "returncode": 0,
+    "oom": false,
+    "nan_or_inf": false,
+    "val/overall_rmse": 0.4692028160625301,
+    "samples_per_second": 1.0
+  },
+  {
+    "lr": 6.0721653939052665e-05,
+    "weight_decay": 0.001,
+    "warmup_steps": 1000,
+    "grad_clip_norm": 1.0,
+    "returncode": 0,
+    "oom": false,
+    "nan_or_inf": false,
+    "val/overall_rmse": 0.1780752612345038,
+    "samples_per_second": 1.0
+  }
+]

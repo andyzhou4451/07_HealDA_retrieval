@@ -1,0 +1,4 @@
+# Loss function configuration
+# Default: CRPS_Gaussian_Loss (eps=1e-6)
+_target_: src.losses.crps_gaussian_loss.CRPS_Gaussian_Loss
+eps: 1e-6

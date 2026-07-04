@@ -1,0 +1,8 @@
+_target_: src.losses.retrieval_tq_loss.RetrievalTQLoss
+type: huber
+delta: 0.1
+w_t: 1.0
+w_q: 1.0
+q_log_transform: false
+pressure_weights_t: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+pressure_weights_q: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]

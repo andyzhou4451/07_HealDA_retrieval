@@ -1,0 +1,98 @@
+# ATMS资料同化模块配置 (pure torch)
+_target_: src.datamodules.assimilate.random_bg.npydatamodule.RandomBgAssimDataModule
+
+era5_dir: ${paths.era5_lr_dir}
+obs_dir: ${paths.obs_dir}
+scale_dir: ${paths.scale_dir}
+
+era5_vars: [
+  "t2m", "u10", "v10", "msl", #"tp",
+  "z-50", "z-100", "z-150", "z-200", "z-250", "z-300", "z-400", "z-500", "z-600", "z-700", "z-850", "z-925", "z-1000",
+  "u-50", "u-100", "u-150", "u-200", "u-250", "u-300", "u-400", "u-500", "u-600", "u-700", "u-850", "u-925", "u-1000",
+  "v-50", "v-100", "v-150", "v-200", "v-250", "v-300", "v-400", "v-500", "v-600", "v-700", "v-850", "v-925", "v-1000",
+  "t-50", "t-100", "t-150", "t-200", "t-250", "t-300", "t-400", "t-500", "t-600", "t-700", "t-850", "t-925", "t-1000",
+  "q-50", "q-100", "q-150", "q-200", "q-250", "q-300", "q-400", "q-500", "q-600", "q-700", "q-850", "q-925", "q-1000",
+]
+obs_list: ["atms", "amsua", "mhs", "prepbufr", "satwnd", "ascat"]
+obs_dict:
+  microwave: 
+    atms: 
+      scaler_vars: [
+        "satellite_height_scaler", "scan_quality_flags_scaler", 
+        'geolocation_quality_flags_scaler', 'granule_quality_flags_scaler'
+      ]
+      tmbrs_vars: [
+        "tmbrs_1", "tmbrs_2", "tmbrs_3", "tmbrs_4", "tmbrs_5", 
+        "tmbrs_6", "tmbrs_7", "tmbrs_8", "tmbrs_9", "tmbrs_10", 
+        "tmbrs_11", "tmbrs_12", "tmbrs_13", "tmbrs_14", "tmbrs_15", 
+        "tmbrs_16", "tmbrs_17", "tmbrs_18", "tmbrs_19", "tmbrs_20",
+        "tmbrs_21", "tmbrs_22" 
+      ]
+      auxiliary_dict:  [
+        'obs_time', 'obs_latitude', 'obs_longitude', 'sat_id', 
+        'scanline', 'fov', 'orbit_number', 'satellite_zenith_angle', 
+        'satellite_azimuth_angle', 'solar_zenith_angle', 'solar_azimuth_angle', 
+        'satellite_height', 'geolocation_quality_flags', 'scan_quality_flags', 'granule_quality_flags'
+      ]
+    amsua: 
+      scaler_vars: [
+        "hols_scaler", "hmsl_scaler", 
+      ]
+      tmbrs_vars: [
+        "tmbrs_1", "tmbrs_2", "tmbrs_3", "tmbrs_4", "tmbrs_5", 
+        "tmbrs_6", "tmbrs_7", "tmbrs_8", "tmbrs_9", "tmbrs_10", 
+        "tmbrs_11", "tmbrs_12", "tmbrs_13", "tmbrs_14", "tmbrs_15", 
+      ]
+      auxiliary_dict: [
+        "said", "siid", "fovn", "lsql", "saza", "soza", "hols", "hmsl", "solazi", "bearaz",
+      ]
+    mhs: 
+      scaler_vars: [
+        "hols_scaler", "hmsl_scaler", 
+      ]
+      tmbrs_vars: [
+        "tmbrs_1", "tmbrs_2", "tmbrs_3", "tmbrs_4", "tmbrs_5", 
+      ]
+      auxiliary_dict: [
+        "said", "siid", "fovn", "lsql", "saza", "soza", "hols", "hmsl", "solazi", "bearaz",
+      ]  
+  conventional:
+    prepbufr:
+      vars: [
+        "t2m", "u10", "v10", "msl",
+        "z-50", "z-100", "z-150", "z-200", "z-250", "z-300", "z-400", "z-500", "z-600", "z-700", "z-850", "z-925", "z-1000",
+        "u-50", "u-100", "u-150", "u-200", "u-250", "u-300", "u-400", "u-500", "u-600", "u-700", "u-850", "u-925", "u-1000",
+        "v-50", "v-100", "v-150", "v-200", "v-250", "v-300", "v-400", "v-500", "v-600", "v-700", "v-850", "v-925", "v-1000",
+        "t-50", "t-100", "t-150", "t-200", "t-250", "t-300", "t-400", "t-500", "t-600", "t-700", "t-850", "t-925", "t-1000",
+        "q-50", "q-100", "q-150", "q-200", "q-250", "q-300", "q-400", "q-500", "q-600", "q-700", "q-850", "q-925", "q-1000",
+      ]
+    satwnd:
+      vars: [
+        "u-50", "u-100", "u-150", "u-200", "u-250", "u-300", "u-400", "u-500", "u-600", "u-700", "u-850", "u-925", "u-1000",
+        "v-50", "v-100", "v-150", "v-200", "v-250", "v-300", "v-400", "v-500", "v-600", "v-700", "v-850", "v-925", "v-1000",
+      ]
+    ascat:
+      vars: [
+      "u10", "v10"
+      ]
+
+seed: 1024
+batch_size: 24
+num_workers: 8
+shuffle: true
+pin_memory: false
+prefetch_factor: 2
+start_train_year: 2016
+start_val_year: 2022
+start_test_year: 2023
+end_year: 2024
+max_lead_time: 120
+iter_num: 5
+daw: 12
+dt_obs: 3
+dt_data: 6
+num_lat: 181
+num_lon: 360
+
+# debug mode
+debug: false

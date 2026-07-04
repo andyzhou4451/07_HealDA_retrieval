@@ -1,0 +1,93 @@
+# HealDA-style retrieval datamodule: observations -> ERA5 T/Q profiles.
+_target_: src.datamodules.retrieval.healda_datamodule.HealDARetrievalDataModule
+
+obs_dir: ${paths.obs_dir}
+era5_dir: ${paths.era5_dir}
+scale_dir: ${paths.scale_dir}
+
+sensors:
+  satellite:
+    - atms
+    - amsua
+    - mhs
+    - hrs4
+  conventional:
+    - gdas_prebufr
+
+target:
+  variables:
+    - t
+    - q
+  pressure_levels: [50, 100, 150, 200, 250, 300, 400, 500, 600, 700, 850, 925, 1000]
+  output_channels: 26
+
+# Data and indexing behavior.  ERA5 is supervision only and is never exposed as an input.
+data:
+  obs_dir: ${paths.obs_dir}
+  era5_dir: ${paths.era5_dir}
+  grid_shape: [181, 360]
+  obs_window:
+    start_hours: -21
+    end_hours: 3
+  no_lookahead: false
+  no_lookahead_window:
+    start_hours: -24
+    end_hours: 0
+  # public02 ERA5 can contain non-00/06/12/18 files such as 22:00:00-t-1000.npy.
+  # Use dt_data=1 + strict_time_index=true for exact nested-file scanning on the supercomputer.
+  dt_data: 1
+  dt_obs: 3
+  # Cap is enforced after the full HealDA observation window is concatenated, not per hourly file.
+  # 100k keeps the first 2-H100 run stable; increase after confirming GPU memory headroom.
+  max_points_per_sensor: 100000
+  strict_time_index: true
+  target_cache_size: 16
+  normalize_target: true
+  normalize_obs: true
+  # 优先复用观测目录里的 XiChen normalize_mean/std；缺失时才回退到 obs_default_normalization。
+  require_obs_stats: false
+  # 路径和样本过滤对齐可运行参考工程：先确认传感器目录存在，再剔除完全无观测窗口的 ERA5 时次。
+  require_sensor_dirs: true
+  filter_empty_observation_windows: true
+  min_required_sensors: 1
+  require_complete_obs_window: false
+  # XiChen 13-level ERA5 state order used only to select T/Q label channels when files contain full states.
+  era5_all_vars: [
+    "t2m", "u10", "v10", "msl",
+    "z-50", "z-100", "z-150", "z-200", "z-250", "z-300", "z-400", "z-500", "z-600", "z-700", "z-850", "z-925", "z-1000",
+    "u-50", "u-100", "u-150", "u-200", "u-250", "u-300", "u-400", "u-500", "u-600", "u-700", "u-850", "u-925", "u-1000",
+    "v-50", "v-100", "v-150", "v-200", "v-250", "v-300", "v-400", "v-500", "v-600", "v-700", "v-850", "v-925", "v-1000",
+    "t-50", "t-100", "t-150", "t-200", "t-250", "t-300", "t-400", "t-500", "t-600", "t-700", "t-850", "t-925", "t-1000",
+    "q-50", "q-100", "q-150", "q-200", "q-250", "q-300", "q-400", "q-500", "q-600", "q-700", "q-850", "q-925", "q-1000",
+  ]
+
+qc:
+  microwave_bt_range: [0, 400]
+  infrared_bt_range: [0, 400]
+  humidity_range: [0, 1]
+  wind_range: [-150, 150]
+  temperature_range: [150, 350]
+  pressure_range_hpa: [0.5, 1100]
+  height_range_m: [0, 60000]
+
+# Used only when retrieval_obs_stats/<sensor>.npz is missing. Override after data inspection if needed.
+obs_default_normalization:
+  satellite: [250.0, 50.0]
+  conventional: [0.0, 1.0]
+
+start_train_year: 2016
+start_val_year: 2022
+start_test_year: 2023
+end_year: 2024
+
+seed: 1024
+batch_size: 1
+num_workers: 8
+shuffle: true
+pin_memory: true
+prefetch_factor: 4
+
+debug: false
+max_debug_samples: 8
+
+persistent_workers: true

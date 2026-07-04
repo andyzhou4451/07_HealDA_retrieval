@@ -1,0 +1,2 @@
+# 天气压缩训练器配置
+_target_: src.pipeline.compression.trainer.CompressionTrainer

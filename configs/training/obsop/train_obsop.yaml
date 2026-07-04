@@ -1,0 +1,31 @@
+# configs/training/default.yaml
+
+# 训练参数
+epochs: 60
+seed: 1024
+pretrain_ckpt: logs/xichen_forecast/runs/checkpoints/best.pt
+resume_ckpt: true
+load_strict: false
+resume_pretrain: true
+lr: 5e-4
+betas: [0.9, 0.95]
+weight_decay: 5e-5
+max_grad_norm: 1.0
+
+# 学习率调度器
+warmup_epochs: 10  # Warmup轮数
+scheduler_type: cosine_warmup  # cosine_warmup | cosine | none
+
+# DDP设置
+find_unused_parameters: true
+
+# 日志
+profile: false  # 启用torch_tb_profiler
+
+# 数值精度
+use_amp: true
+precision:
+  type: "bf16"
+
+# 加速卡类型: "cuda" 或 "gpu"
+device: "cuda"

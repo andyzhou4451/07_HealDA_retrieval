@@ -1,0 +1,39 @@
+base_config: configs/train_h100_80gb_single_gpu.yaml
+generated_by: scripts/tune_h100_single_gpu.py
+selection_rule: highest samples_per_second among stable non-OOM trials under max_memory_utilization
+recommended:
+  batch_size: 2
+  effective_batch_size: 2
+  patch_size:
+  - 8
+  - 8
+  num_workers: 4
+  prefetch_factor: 2
+  pin_memory: true
+  persistent_workers: true
+  precision: bf16
+  compile: false
+  channels_last: true
+  oom: false
+  nan_or_inf: false
+  returncode: 0
+  samples_per_second: 2.9079700005769253
+  max_memory_reserved_gb: 40.0625
+  max_memory_allocated_gb: 34.053125
+  memory_utilization: 0.50078125
+  step_time_mean: 0.6877650043168296
+  step_time_p50: 0.6877650043168296
+  step_time_p90: 0.7565415047485127
+overrides:
+- datamodule.batch_size=2
+- datamodule.num_workers=4
+- datamodule.prefetch_factor=2
+- datamodule.pin_memory=true
+- datamodule.persistent_workers=true
+- training.precision.type=bf16
+- precision.amp_dtype=bf16
+- model.net.patch_size=[8,8]
+- training.compile.enabled=false
+- precision.compile.enabled=false
+- model.net.channels_last=true
+- training.channels_last=true

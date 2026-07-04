@@ -1,0 +1,12 @@
+root_dir: ${hydra:runtime.cwd}
+
+obs_dir: /public02/data/Observation/observation_npy/
+era5_dir: /public02/data/era5_np181x360_level13
+era5_lr_dir: /public02/data/era5_np181x360_level13
+scale_dir: /public02/data/era5_np181x360_level13/normalized_mean_std
+
+log_dir: ${paths.root_dir}/logs
+output_dir: ${hydra:runtime.output_dir}
+work_dir: ${hydra:runtime.cwd}
+
+performance_log_dir: outputs/logs
